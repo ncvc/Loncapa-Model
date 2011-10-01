@@ -21,19 +21,19 @@ class Server:
             print  [x for x in self.bank if cmd[3] in x.tags]
 
         elif cmd[0] == 'search' and cmd[1] == 'all' and cmd[2] == 'problems':
-            print self.sendRequest(('search',cmd[3]))
+            print self.sendRequestToAll(('search',cmd[3]))
 
         elif cmd[0] == 'list' and cmd[1] == 'server' and cmd[2] == 'problems':
             print self.bank
 
         elif cmd[0] == 'list' and cmd[1] == 'all' and cmd[2] == 'problems':
-            print  self.sendRequest(('list', ''))
+            print  self.sendRequestToAll(('list', ''))
 
         else:
             print "Usage: 'search <server/all> problems <query>' or 'list <server/all> problems'" 
 
-    def sendRequest(self, data):
-        return self.framework.sendRequest(data)
+    def sendRequestToAll(self, data):
+        return self.framework.sendRequestToAll(data)
 
     def processRequest(self, data):
         reqType, query = data
