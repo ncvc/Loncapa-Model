@@ -6,9 +6,10 @@ Created on Fri Sep 30 19:18:49 2011
 """
 
 class Server:
-    def __init__(self, name, bank):
+    def __init__(self, name, bank, framework):
         self.name = name
         self.bank = bank
+        self.framework = framework
     
     def command(self, cmd):
         #search, list bank
