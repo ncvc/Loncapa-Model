@@ -12,7 +12,10 @@ class Server:
     
     def command(self, cmd):
         #search, list bank
-        pass
+        if (cmd[0:6] == 'search'):
+            pass
+        if (cmd[0:3] == 'list'):
+            pass
 
     def sendRequest(self, name, data):
         pass
