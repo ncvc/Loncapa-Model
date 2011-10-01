@@ -11,6 +11,9 @@ class Problem:
         self.diff = diff
         self.tags = tags
         self.descr = descr
+    
+    def __repr__(self):
+        return 'Problem(%s, %s, %s, %s)' % (self.name, self.diff, self.tags, self.descr)
 
 class PSet:
     def __init__(self, problems):

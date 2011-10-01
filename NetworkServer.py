@@ -63,3 +63,6 @@ class Bank:
             probs.append((tag, prob))
             
         self.problems = dict(probs)
+    
+    def __repr__(self):
+        return '\n'.join([str(prob) for prob in self.problems.values()])
