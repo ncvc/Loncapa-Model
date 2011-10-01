@@ -12,10 +12,10 @@ class Server:
         self.framework = framework
     
     def command(self, cmd):
-        cmd = cmd.split()
-        if (cmd[0].lower() == 'search' and len(cmd) == 2):
-            print [x for x in self.bank if cmd[1].lower().strip() in x.tags]
-        elif (cmd[0].lower() == 'list'):
+        cmd = cmd.lower().split()
+        if (cmd[0] == 'search' and len(cmd) == 2):
+            print [x for x in self.bank if cmd[1] in x.tags]
+        elif (cmd[0] == 'list'):
             print self.bank
         else:
             print  "Usage: 'search <query>' or 'list'" 
