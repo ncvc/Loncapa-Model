@@ -12,14 +12,16 @@ class Server:
         self.framework = framework
     
     def command(self, cmd):
-        #search, list bank
-        if (cmd[0:6] == 'search'):
-            pass
-        if (cmd[0:3] == 'list'):
-            pass
+        cmd = cmd.split()
+        if (cmd[0].lower() == 'search' and len(cmd) == 2):
+            print [x for x in self.bank if cmd[1].lower().strip() in x.tags]
+        elif (cmd[0].lower() == 'list'):
+            print self.bank
+        else:
+            print  "Usage: 'search <query>' or 'list'" 
 
-    def sendRequest(self, name, data):
-        pass
+    def sendRequest(self, data):
+        print self.framework.sendRequest(data)
 
     def processRequest(self, data):
-        pass
+        return self.command('search '+ str(data))
