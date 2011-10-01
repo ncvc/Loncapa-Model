@@ -6,7 +6,7 @@ Created on Fri Sep 30 19:21:56 2011
 """
 
 class Problem:
-    def __init__(self, name, diff, tags, descr='None"):
+    def __init__(self, name, diff, tags, descr='None'):
         self.name = name
         self.diff = diff
         self.tags = tags

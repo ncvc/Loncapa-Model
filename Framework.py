@@ -5,7 +5,7 @@ Created on Fri Sep 30 19:49:15 2011
 @author: Nathan
 """
 
-import Server
+from Server import Server, Bank
 
 class Framework:
     def __init__(self, numServers):
