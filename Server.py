@@ -9,3 +9,13 @@ class Server:
     def __init__(self, name, bank):
         self.name = name
         self.bank = bank
+    
+    def command(self, cmd):
+        #search, list bank
+        pass
+
+    def sendRequest(self, name, data):
+        pass
+
+    def processRequest(self, data):
+        pass
