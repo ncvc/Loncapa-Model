@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Sep 30 19:21:56 2011
+#Contains all data structures
 
-@author: Nathan
-"""
-
+#Represents a singel problem
 class Problem:
     def __init__(self, name, diff, tags, descr='None'):
         self.name = name
@@ -13,12 +9,42 @@ class Problem:
         self.descr = descr
     
     def __repr__(self):
-        return 'Problem(%s, %s, %s, %s)' % (self.name, self.diff, self.tags, self.descr)
+        return '%s: Difficulty %s, Tags %s, Desciption %s' % (self.name, self.diff, self.tags, self.descr)
+    
+#represents a question or pset bank
+class Bank:
+    def __init__(self, data=[], name=None, verbose=False):
+        self.data = dict([(d.name.lower(), d ) for d in data])
+        self.name = name
+        self.verbose = verbose
+        
+    def __repr__(self):
+        s = '%s' % self.name if self.verbose else ''
+        for p in self.data.values():
+            s += str(p) + '\n'
+        return s
+        
+    def __len__(self):
+        return len(self.data.values())
 
-class PSet:
-    def __init__(self, problems):
-        self.probs = problems
+    #merge another bank with this bank 
+    def add(self, other):
+        for d in other.data.values():
+            self.data[d.name.lower()] = d
 
+    #add a bank as a data entry into this bank
+    def addBankAsData(self, bank):
+        self.data[bank.name] = bank
+    
+    def search(self, query):
+         return Bank([d for d in self.data.values() if query in d.tags])
+
+    def has_key(self, key):
+        return True if self.data.has_key(key) else False
+
+    def __getitem__(self, item):
+        return self.data[item] if self.data.has_key(item) else None
+        
 class Hierarchy:
     def __init__(self):
         pass

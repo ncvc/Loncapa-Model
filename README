@@ -1,1 +1,7 @@
-Simple proof-of-concept for a multinode searchable database recommendation system
+Simple proof-of-concept for a simulated multinode searchable database recommendation system
+
+To run the simulator, execute "python Framework.py" in the directory with all the project files
+
+Each problem is currently limited to one tag and search matches query string against problem tags
+
+Not all functions are implemented. Type 'help' for a full listing and status of each command
