@@ -41,11 +41,13 @@ class Server:
            self.listAllProblems()
 
         elif cmd[0] == 'spsets' and len(cmd) == 1:
-            print "\n" + str(self.psets)
+            #print "\n" + str(self.psets)
+            pass
 
         elif cmd[0] == 'mkpset' and len(cmd) > 1:
-            print ''
-            self.makePset(cmd[1], cmd[2:] if len(cmd) > 2 else [])
+            #print ''
+            #self.makePset(cmd[1], cmd[2:] if len(cmd) > 2 else [])
+            pass
 
         elif cmd[0] == 'rmpset' and len(cmd) == 2:
             #del self.psets[cmd[1]]
@@ -56,9 +58,7 @@ class Server:
             pass
 
         elif cmd[0] == 'vpset' and len(cmd) == 2:
-            #for x in self.psets[cmd[1]]:
-            #    print x
-            pass
+            print self.psets
                 
         elif cmd[0] == 'rmqpset' and len(cmd) > 2:
             #if self.psets.has_key(cmd[1]):
@@ -122,8 +122,7 @@ class Server:
             newBank = Bank([], pset.lower(), True)
             self.psets.addBankAsData(newBank)
         if len(questions) > 0:
-            #self.psets.addBankAsData(self.getProblemsByName(questions, pset))
-            pass
+            pass #self.psets.addBankAsData(self.getProblemsByName(questions, pset))
         
     def deletePset(self, pset, questions):
         pass
