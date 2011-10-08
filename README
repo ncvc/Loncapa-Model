@@ -2,6 +2,10 @@ Simple proof-of-concept for a simulated multinode searchable database recommenda
 
 To run the simulator, execute "python Framework.py" in the directory with all the project files
 
+To run the recommender, execute "python Recommender.py <data file name> <seed item number>" in the directory with the recommender file and testdata.py
+
+Data file is a tab delimited two column text file of item number and course name. See testdata.dat for an example
+
 Each problem is currently limited to one tag and search matches query string against problem tags
 
 Not all functions are implemented. Type 'help' for a full listing and status of each command

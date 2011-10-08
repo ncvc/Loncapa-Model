@@ -1,6 +1,6 @@
 #Contains all data structures
 
-#Represents a singel problem
+#Represents a single problem
 class Problem:
     def __init__(self, name, diff, tags, descr='None'):
         self.name = name

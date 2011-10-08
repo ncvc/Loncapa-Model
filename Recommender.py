@@ -1,68 +1,64 @@
 from Data import RecommenderResult
 import heapq, sys
+import time
 
 class Recommender:
     def __init__(self, courseList):
-        self.courseList = courseList
-        #matrix keys will be resource numbers, matrix values are lists of course names that a particular resource appeared in
+        courseList = open(courseList)
+        #matrix keys will be resource numbers, matrix values are sets of course names that a particular resource appeared in
         self.matrix = {}
-        
-    def recommend(self, seedItem, numRecommendations):
-        #courseList is the name of the data file
-        courseList = open(self.courseList)
         
         #process the file line by line
         for line in courseList:
-            line = line.strip().split("\t")
-            resourceNumber = line[0]
-            courseName = line[1]
+            resourceNumber, courseName = line.strip().split("\t")
 
             #add the courseName to the dictionary entry for the resourceNumber
-            try:
-                self.matrix[resourceNumber].append(courseName)
-            except KeyError:
-                self.matrix[resourceNumber] = [courseName]
+            if not resourceNumber in self.matrix:
+                self.matrix[resourceNumber] = set([courseName])
+            else:
+                self.matrix[resourceNumber].add(courseName)
 
+        courseList.close()
+        
+    def recommend(self, seedItem, numRecommendations):
+        #check that the seedItem is a valid problem
+        if not seedItem in self.matrix:
+            print "%s is not a valid problem" % seedItem
+            return []
+        
         #make an empty heap
         amazonResults = []
         
         #calculate the amazonDistance for every item in the matrix (except the recommender seed)
-        for key in [x for x in self.matrix.keys() if not x == seedItem]:
-            heapq.heappush(amazonResults,  RecommenderResult(key, self.amazonDistance(self.matrix[key], self.matrix[seedItem])))
-            
-        #return the specified number of results requested
-        return heapq.nlargest(numRecommendations, amazonResults)
-        
-    def amazonDistance(self, resource1CourseList, resource2CourseList):
-        #sort the resource courses by name
-        resource1CourseList.sort()
-        resource2CourseList.sort()
-        i = j = amazonDistance = 0
+        for key in self.matrix.keys():
+            heapq.heappush(amazonResults, (-1*self.amazonDistance(self.matrix[key], self.matrix[seedItem]), key))
 
-        #while we're in range keep comparing
-        while ( i < len(resource1CourseList) and j < len(resource2CourseList) ):
-            #get course names to compare
-            course1 = resource1CourseList[i]
-            course2 = resource2CourseList[j]
-            #if equal, then resource1 and resource2 appeared in a course together, add 1 to the amazon distance
-            if course1 == course2:
-                amazonDistance += 1
-                i += 1
-                j += 1
-            # course1 comes before course2, no match, advance in course1 list
-            elif course1 < course2:
-                i += 1
-            #course2 comes before course1, no match, advance in course2 list
-            else:
-                j += 1
+        result  = [heapq.heappop(amazonResults) for x in xrange(numRecommendations)]
+
+        #remove seedItem if it is in the results and replace with the next recommendation
+        for x in result:
+            if x[1] == seedItem:
+                result.remove(x)
+                result.append(heapq.heappop(amazonResults))
+                break
+
+        #return the specified number of results requested
+        return result
         
-        return amazonDistance
+    def amazonDistance(self, resource1CourseSet, resource2CourseSet):
+        #find the number of common courses
+        return len(resource1CourseSet.intersection(resource2CourseSet))
 
 if __name__ == "__main__":
-    r = Recommender("testdata.dat")
-    print "Recommended Problems for %s" % sys.argv[1]
-    for x in r.recommend(sys.argv[1], 10):
-        print x
+    print "Loading File..."
+    time.clock()
+    r = Recommender(sys.argv[1])
+    mid = time.clock()
+    print "Time to load the file: %f seconds\n" % mid
+    print "Recommended Problems for seed item %s using %s" % (sys.argv[2], sys.argv[1])
+    for x in r.recommend(sys.argv[2], 10):
+        print "Name:%s AmazonDistance:%i" % (x[1], -x[0])
+    print "\nTime computing recommendations: %f seconds" % (time.clock() - mid)
 
     
         
