@@ -44,18 +44,4 @@ class Bank:
 
     def __getitem__(self, item):
         return self.data[item] if self.data.has_key(item) else None
-        
-class Hierarchy:
-    def __init__(self):
-        pass
 
-class RecommenderResult:
-    def __init__(self, name, amazonDistance):
-        self.name = name
-        self.amazonDistance = amazonDistance
-
-    def __cmp__(self, other):
-        return self.amazonDistance.__cmp__(other.amazonDistance)
-
-    def __repr__(self):
-        return "RecommenderResult Name:%s, AmazonDistance:%i" % (self.name, self.amazonDistance)

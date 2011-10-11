@@ -1,14 +1,16 @@
 from NetworkServer import Server
 from Data import Problem, Bank
-import random
+import random, cmd, readline
 
 #framework keeps a list of all the servers and passes requests between them. This models the complex networking between the servers.
-class Framework:
+class Framework(cmd.Cmd):
     def __init__(self, numServers, numProbs):
-        self.servers = dict([('Server%i' % i, Server('Server%i' % i, self.problems('Server%i'%i, i*numProbs,numProbs), self, Bank([], 'psets bank'))) for i in xrange(numServers)])
-        self.loggedIn = 'Server0'
+        self.servers = dict([('Server%i' % i, Server('Server%i' % i, self.problems('Server%i'%i, i*numProbs,numProbs), self)) for i in xrange(numServers)])
+        self.loggedIn = self.servers[self.servers.keys()[0]]
+        cmd.Cmd.__init__(self)
+        self.prompt = '\n>'
         
-    #creates a bunch of problem banks, one for each server
+    #creates a bunch of random problem banks, one for each server
     def problems(self, serverName, startNum, entries = 0):
         tags = ['kinematics', 'energy', 'rotation', 'conservation', 'motion', 'potential', 'kinetic']
         diffs = range(10)
@@ -28,44 +30,57 @@ class Framework:
     
     def sendReqToAll(self, req):
         return [self.sendReq(server, req) for server in self.servers]
+
+    def do_login(self, name):
+        if name in self.servers.keys():
+            self.loggedIn = self.servers[name]
+            print 'logged in to {0:s}'.format(self.loggedIn)
+        else:
+            print "{0:s} is not a valid server name".format(name)
+
+    def help_login(self):
+        print 'Usage: login <ServerName>\nChanges the active server'
+
+    def do_loggedIn(self, args):
+        print self.loggedIn
+
+    def help_loggedIn(self):
+        print 'Usage: loggedIn\nLists the name of the active server'
+
+    def do_sproblems(self, args):
+        self.loggedIn.listServerProblems()
+
+    def help_sproblems(self):
+        print "Usage: sproblems\nLists all problems on the server"
+
+    def do_problems(self, args):
+        self.loggedIn.listAllProblems()
+
+    def help_problems(self):
+        print "Usage: problems\nLists all problems on the network"
+
+    def do_search(self, args):
+        self.loggedIn.searchAllProblems(args.strip())
+
+    def help_search(self):
+        print "Usage: search <query>\nLists all problems on the network that match query tag"
+
+    def do_ssearch(self, args):
+        self.loggedIn.searchServerProblems(args.strip())
+
+    def help_ssearch(self):
+        print "Usage: ssearch <query>\nLists all problems on server that match query tag"
+
+    def do_exit(self, line):
+        return True
+
+    #shortcuts
+    #do_quit = do_exit
+    #do_q = do_exit
     
-    def mainLoop(self):
-        inp = ['']
-        print '\nLogged in as %s\n' % self.loggedIn
-        
-        while inp[0] != 'exit':
-            rawInp = raw_input('>')
-            inp = rawInp.split()
-
-            if not len(inp) > 0:
-                inp.append('')
-            elif inp[0] == 'list' and inp[1] == 'servers':
-                print "%i servers running:\n"
-                for name in self.servers:
-                    print name
-                print "\n"
-            #elif inp[0] == 'logout':
-            #    print 'logged out of %s' % self.loggedIn
-            #    self.loggedIn = None
-            elif inp[0] == 'login':
-                if inp[1] in self.servers:
-                    self.loggedIn = inp[1]
-                    print 'logged in to %s' % self.loggedIn
-                else:
-                    print "%s is not a valid server name" % inp[1]
-            elif inp[0] == 'exit':
-                pass
-            else:
-                if self.loggedIn in self.servers:
-                    self.servers[self.loggedIn].command(rawInp)
-                else:
-                    print "Not logged into a valid server!"
-        print 'Exiting'
-                
-
 if __name__ == '__main__':
     defaultNumServers = 5
-    defaultNumProblems = 7
+    defaultNumProblems = 10
     numServers = raw_input('Input number of servers: ')
     numServers = int(numServers) if numServers.isdigit() else defaultNumServers
     numProblems = raw_input('Input number of problems on each server: ')
@@ -77,4 +92,4 @@ if __name__ == '__main__':
     print "Servers started:"
     for x in framework.servers.values():
         print x
-    framework.mainLoop()
+    framework.cmdloop()
